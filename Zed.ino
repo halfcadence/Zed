@@ -26,6 +26,9 @@ AnalogSensor pot1 = AnalogSensor(POT_1_PIN, 2);
 const int CYCLE_BUTTON_PIN = 13;
 ButtonCounter counter(CYCLE_BUTTON_PIN);
 
+const int PANIC_BUTTON_PIN = 12;
+ButtonCounter panicCounter(CYCLE_BUTTON_PIN);
+
 // photocell
 const int PHOTOCELL_PIN = A4;
 AnalogSensor photocell = AnalogSensor(PHOTOCELL_PIN, 1000);

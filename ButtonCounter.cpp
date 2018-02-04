@@ -1,21 +1,22 @@
 #include "Arduino.h"
 #include "ButtonCounter.h"
 
-Button myButton = Button(12, true, false, 25);
+Button *myButton;
 
 ButtonCounter::ButtonCounter(int pin)
 {
-  Serial.println(pin);
-
   this->pin = pin;
-  myButton.changePin(this->pin);
   pinMode(this->pin, INPUT);
+  
+  myButton = new Button(pin, true, false, 25);
+  
   counter = 0;
 }
 void ButtonCounter::Update() {
 
-  myButton.read();
-  if (myButton.wasPressed()) {
+  Button buttonObject = *myButton;
+  (*myButton).read();
+  if ((*myButton).wasPressed()) {
     counter++;
     Serial.println(counter);
 
