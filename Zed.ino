@@ -126,21 +126,31 @@ long solid() {
 
 long mhcid() {
   // Serial.println(millis());
-  return fade(MHCID_PRIMARY, MHCID_SECONDARY, 5);
+  return fade(MHCID_PRIMARY_HSL, MHCID_SECONDARY_HSL, 1);
 }
 
-// cycles between @colors in @cycleSeconds
-long fade (long co, long lor, long cycleSeconds) {
-  const int NUM_STEPS = 256;
+// cycles between @co/@lor in @cycleSeconds
+// TODO: fade by log rather than linearly
+// TODO: find out why lightness spikes
+long fade (const float* co, const float* lor, long cycleSeconds) {
   int cycleMillis = cycleSeconds * 1000;
-  long timePerStep = max( cycleMillis / NUM_STEPS, 10); // step must be at least 10 millis long
-#if(defined DEBUG && defined DEBUG_FADE)
-  Serial.println(millis() % cycleMillis);
 
-  // based on step calculate color as % hsb diff from color 1 to color 2
+  long currentMillis = millis(); // snapshot the time
+  long cycleMid = cycleMillis / 2; // find midpoint of cycle
+  long cycleLocation = currentMillis % cycleMillis;
+  long distance = abs(cycleMillis / 2 - cycleLocation); // distance 
+  float distanceP = (float) distance / cycleMid;
+#if(defined DEBUG && defined DEBUG_FADE)  
+  //Serial.println(distanceP);
 #endif
-  return MHCID_PRIMARY;
-  // could use DP for this part if needed optimization
-
-  
+  float coToLor[3] = {lor[0] - co[0], lor[1] - co[1], lor[2] - co[2]}; //HSL distance from co to lor
+  float intendedHSL[3] = {co[0] + coToLor[0] * distanceP, co[1] + coToLor[1] * distanceP, co[2] + coToLor[2] * distanceP};
+  Serial.print(intendedHSL[0]);
+  Serial.print(" ");
+  Serial.print(intendedHSL[1]);
+  Serial.print(" ");
+  Serial.print(intendedHSL[2]);
+  Serial.print(" ");
+  Serial.println();
+  return Hue::hsl2hex(intendedHSL[0], intendedHSL[1], intendedHSL[2]);
 }
