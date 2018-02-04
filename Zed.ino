@@ -1,5 +1,6 @@
 #include "AnalogSensor.h"
 #include "Light.h"
+#include <Button.h>
 #include "ButtonCounter.h"
 #include "Hue.h"
 
@@ -8,7 +9,7 @@
 // #define DEBUG_BUTTON
 // #define DEBUG_PHOTOCELL
 // #define DEBUG_COLOR
- #define DEBUG_FADE
+// #define DEBUG_FADE
 
 const int NUM_MODES = 3;
 const long MHCID_PRIMARY = 0x188fb4;
@@ -22,8 +23,8 @@ const int POT_1_PIN = A5;
 AnalogSensor pot1 = AnalogSensor(POT_1_PIN, 2);
 
 // button
-const int BUTTON_PIN = 13;
-ButtonCounter counter = ButtonCounter(BUTTON_PIN);
+const int CYCLE_BUTTON_PIN = 13;
+ButtonCounter counter(CYCLE_BUTTON_PIN);
 
 // photocell
 const int PHOTOCELL_PIN = A4;
@@ -39,31 +40,7 @@ void setup() {
   Serial.begin(9600);
 }
 
-/*
-// the loop routine runs over and over again forever:
-void loop() {
-  pot1.Update();
-#if(defined DEBUG && defined DEBUG_POT)
-  Serial.println(pot1.getReading());
-#endif
 
-  myButton.read();
-#if(defined DEBUG && defined DEBUG_BUTTON)
-  if (myButton.wasReleased()) {
-    Serial.println("pressed");
-  }
-#endif
-
-  photocell.Update();
-#if(defined DEBUG && defined DEBUG_PHOTOCELL)
-  Serial.println(photocell.getReading());
-#endif
-  delay(1);
-
-  // set color
-  light.setColor(255, 0, 0);  // red
-}
-*/
 // check button presses
   // based on press, calculate color for each mode...
     // solid mode: select color, detect lightness
@@ -76,11 +53,10 @@ void loop() {
   
   switch (mode) {
     case 0:
-      //light.setHexColor(solid());
       light.setHexColor(mhcid());
       break;
     case 1:
-      light.setHexColor(mhcid());
+      light.setHexColor(solid());
       break;
     case 2:
       light.setHexColor(MHCID_SECONDARY);
@@ -95,7 +71,7 @@ void loop() {
 
 long solid() {
   float hue = 1;
-  float saturation = 1;
+  float saturation = .5;
   float lightness = 1;
 
   // find hue from pot1
@@ -121,7 +97,6 @@ long solid() {
   Serial.println(" ");
 #endif
   return Hue::hsl2hex(hue, saturation, lightness);
-  
 }
 
 long mhcid() {
@@ -140,11 +115,9 @@ long fade (const float* co, const float* lor, long cycleSeconds) {
   long cycleLocation = currentMillis % cycleMillis;
   long distance = abs(cycleMillis / 2 - cycleLocation); // distance 
   float distanceP = (float) distance / cycleMid;
-#if(defined DEBUG && defined DEBUG_FADE)  
-  //Serial.println(distanceP);
-#endif
   float coToLor[3] = {lor[0] - co[0], lor[1] - co[1], lor[2] - co[2]}; //HSL distance from co to lor
   float intendedHSL[3] = {co[0] + coToLor[0] * distanceP, co[1] + coToLor[1] * distanceP, co[2] + coToLor[2] * distanceP};
+#if(defined DEBUG && defined DEBUG_FADE)  
   Serial.print(intendedHSL[0]);
   Serial.print(" ");
   Serial.print(intendedHSL[1]);
@@ -152,5 +125,6 @@ long fade (const float* co, const float* lor, long cycleSeconds) {
   Serial.print(intendedHSL[2]);
   Serial.print(" ");
   Serial.println();
+#endif
   return Hue::hsl2hex(intendedHSL[0], intendedHSL[1], intendedHSL[2]);
 }
