@@ -1,7 +1,7 @@
 #include <Button.h>
 #include "AnalogSensor.h"
 #include "Light.h"
-
+#include "ButtonCounter.h"
 #define DEBUG
 // #define DEBUG_POT
 // #define DEBUG_BUTTON
@@ -54,6 +54,13 @@ void loop() {
 }
 */
 void loop() {
+  // check button presses
+  // based on press, calculate color for each mode...
+    // solid mode: select color, detect lightness
+    // panic mode: panic!
+    // mhci+d mode: vary between blue and green
+  
+  // set color
   light.setColor(255, 0, 0);  // red
   delay(1000);
   light.setColor(0, 255, 0);  // green
