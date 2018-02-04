@@ -3,16 +3,17 @@
 
 #define COMMON_ANODE
 
-Light::Light(int redPin, int bluePin, int greenPin)
+// #define DEBUG
+Light::Light(int redPin, int greenPin, int bluePin)
 {
   this->redPin = redPin;
-  pinMode(redPin, INPUT);     
-
-  this->bluePin = bluePin;
-  pinMode(bluePin, INPUT); 
+  pinMode(redPin, INPUT);
   
   this->greenPin = greenPin;
   pinMode(greenPin, INPUT);
+
+  this->bluePin = bluePin;
+  pinMode(bluePin, INPUT); 
    
   red = green = blue = 0;
 }
@@ -26,6 +27,14 @@ void Light::writePins() {
   analogWrite(redPin, this->red);
   analogWrite(greenPin, this->green);
   analogWrite(bluePin, this->blue);
+#endif
+#ifdef DEBUG
+  Serial.print(this->red);
+  Serial.print(" ");
+  Serial.print(this->green);
+  Serial.print(" ");
+  Serial.print(this->blue);
+  Serial.println(" ");
 #endif
 }
 

@@ -6,8 +6,8 @@ class Light
   // Class Member Variables
   // These are initialized at startup
   int redPin;
-  int bluePin;
   int greenPin;
+  int bluePin;
  
   // These maintain the current colors
   int red;
@@ -15,8 +15,8 @@ class Light
   int green;
   
   public:
-    Light(int redPin, int bluePin, int greenPin);
-    void setColor(int red,int blue,int green);
+    Light(int redPin, int greenPin, int bluePin);
+    void setColor(int red,int green,int blue);
     void setHexColor(long hex);
   private:
     void writePins();
