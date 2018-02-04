@@ -17,6 +17,9 @@ class Light
   public:
     Light(int redPin, int bluePin, int greenPin);
     void setColor(int red,int blue,int green);
+    void setHexColor(long hex);
+  private:
+    void writePins();
 };
 #endif
 
