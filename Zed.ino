@@ -10,7 +10,7 @@
 // #define DEBUG_PHOTOCELL
 // #define DEBUG_COLOR
 // #define DEBUG_FADE
- #define DEBUG_CLASS
+#define DEBUG_CLASS
 
 const int NUM_MODES = 3;
 const long MHCID_PRIMARY = 0x188fb4;
