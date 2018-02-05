@@ -10,7 +10,8 @@ class ButtonCounter
   int pin;
   // number of button presses
   int counter;
-  
+  Button *myButton;
+
   public:
     ButtonCounter(int pin);
     void Update();
